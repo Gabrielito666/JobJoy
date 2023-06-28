@@ -80,4 +80,11 @@ app.post('/quitar', async(req, res)=>{
     res.json({ok : true})
 })
 
+app.post('/invitar_subdito', async(req, res)=>{
+    let mensaje = req.body;
+    let userExist = await db().usuarioExiste(mensaje.subdito);
+    if(userExist){db().invitarSubdito(req.session.usuario, mensaje.subdito)};
+    res.json({usuarioExiste : userExist});
+})
+
 app.listen(PORT, ()=>{console.log('escuchando el puerto '+ PORT)})

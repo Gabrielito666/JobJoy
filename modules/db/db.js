@@ -90,6 +90,12 @@ module.exports = () =>{
         },
         actualizarIds : (usuario, tareas, habitos) => {sqliteExpress.update(db, 'usuarios', {tareas : JSON.stringify(tareas), habitos : JSON.stringify(habitos)}, {usuario : usuario})},
         resetearHabitos : ()=>{},
-        eliminarFila :(usuario)=>{sqliteExpress.delete(db, 'usuarios', {usuario : usuario})}
+        eliminarFila :(usuario)=>{sqliteExpress.delete(db, 'usuarios', {usuario : usuario})},
+        invitarSubdito : async (amo, subdito)=>{
+            let array_notificaciones = await sqliteExpress.select(db, 'usuarios', 'notificaciones', {usuario : subdito});
+            array_notificaciones = JSON.parse(array_notificaciones[0].notificaciones);
+            array_notificaciones.push(amo);
+            sqliteExpress.update(db, 'usuarios', {notificaciones : JSON.stringify(array_notificaciones)});
+        }
     }
 }
