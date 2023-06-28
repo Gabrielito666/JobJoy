@@ -83,8 +83,16 @@ app.post('/quitar', async(req, res)=>{
 app.post('/invitar_subdito', async(req, res)=>{
     let mensaje = req.body;
     let userExist = await db().usuarioExiste(mensaje.subdito);
+    //comprobar si no se ha enviado ya una notificación igual
     if(userExist){db().invitarSubdito(req.session.usuario, mensaje.subdito)};
     res.json({usuarioExiste : userExist});
+})
+
+app.post('/solicitud_aceptada', async(req, res)=>{
+    let mensaje = req.body;
+    console.log(mensaje.amo)
+    //comprobar que no se ha aceptado ya una solicitud igual
+    db().agregarSubdito(req.session.usuario, mensaje.amo)
 })
 
 app.listen(PORT, ()=>{console.log('escuchando el puerto '+ PORT)})

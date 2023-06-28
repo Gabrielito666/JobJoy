@@ -8,6 +8,8 @@ const boton_realizar = document.getElementById('b_realizar');
 const ventana_agregar = document.getElementById('v_agregar');
 const salir_ventana = document.getElementById('s_ventana');
 const ventana_mensaje = document.getElementById('v_mensaje')
+const ventana_notificaciones = document.getElementById('v_notificaciones');
+const boton_notificaciones = document.getElementById('b_notificaciones');
 
 let usuario, porx_id_habito, prox_id_tarea;
 let hayTareas = false;
@@ -58,10 +60,35 @@ function renderizarTablas(datos){
         }        
         setTimeout(()=>{ajaxPost('/pantalla', {}, renderizarTablas)}, datos.timeForMidnight)
     }else{location.href = '../login/index.html'};
-    if(datos.notificaciones.length>0){
-        console.log("si")
-        //pantalla emergente notifficaciones con boton de aceptar 
-    }else{console.log("no")}
+
+    let stringNotificaciones = "";
+    if(datos.notificaciones.length <= 0){
+        stringNotificaciones = "<p>No has recibido ninguna notificación... Sal a buscar amigos</p>"
+    }else{
+        datos.notificaciones.forEach(notificacion=>{
+            stringNotificaciones += `<div id="${notificacion}"><h2>Has recibido una notificación para ser subdito de ${notificacion}</h2><button id="b_aceptar" name="${notificacion}">Aceptar</button>`
+        })
+        
+    }
+    stringNotificaciones += '<button id="b_salir">Salir</button></div>' 
+
+    ventana_notificaciones.innerHTML= stringNotificaciones;
+    let boton_salir = document.getElementById('b_salir');
+    boton_salir.addEventListener('click', salirNotificaciones);
+
+    if(datos.notificaciones.length > 0){
+        
+        let boton_aceptar = document.getElementById('b_aceptar');
+        
+        boton_aceptar.addEventListener('click', (e)=>{
+            ajaxPost('/solicitud_aceptada', {amo : e.target.name}, ()=>{});
+            salirNotificaciones();
+            document.querySelectorAll(`div[id="${e.target.name}"]`).forEach(not=>{not.remove()});
+        })
+        mostrarNotificaciones();
+    }
+    
+    
 }
 function actualizarTabla(tabla, actibidad, id) {
     let stringTareas = "";
@@ -89,6 +116,12 @@ function ventanaMensaje(color, mensaje){
     ventana_mensaje.hidden = false;
     setTimeout(()=>{ventana_mensaje.hidden = true}, 4000)
 }
+function mostrarNotificaciones(){
+    ventana_notificaciones.hidden = false;
+}
+function salirNotificaciones (){
+    ventana_notificaciones.hidden = true;
+}
 
 boton_actualizar.addEventListener('click', ()=>{ajaxPost('/pantalla', {}, renderizarTablas);})
 
@@ -105,7 +138,7 @@ boton_enviar.addEventListener('click', ()=>{
     let input = document.getElementById('i_agregar').value
     if(aEnviar === 'subdito'){
         if (input === usuario){ventanaMensaje('red', 'No puedes ser tu propio subdito')}
-        ajaxPost('/invitar_subdito', {subdito : input}, callbackSubdito)
+        else{ajaxPost('/invitar_subdito', {subdito : input}, callbackSubdito)};
     }else{
         let nuevoElemento = {actibidad : input};
         let proxID;
@@ -120,8 +153,7 @@ boton_enviar.addEventListener('click', ()=>{
             proxID = porx_id_habito;
             porx_id_habito++
         };
-        console.log(prox_id_tarea, porx_id_habito, proxID)
-        
+      
         ajaxPost(`agregar/${aEnviar}`, {nuevoElemento : nuevoElemento}, ()=>{});
         actualizarTabla(aEnviar, input, proxID);
         document.getElementById('i_agregar').value = "";
@@ -152,5 +184,7 @@ boton_realizar.addEventListener('click', ()=>{
         if (trsHabitos.length === 0){document.getElementById('h_cabecera').remove(); hayHabitos=false};
     }
 })
+
+boton_notificaciones.addEventListener('click', mostrarNotificaciones);
 
 ajaxPost('/pantalla', {}, renderizarTablas);

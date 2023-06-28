@@ -95,7 +95,21 @@ module.exports = () =>{
             let array_notificaciones = await sqliteExpress.select(db, 'usuarios', 'notificaciones', {usuario : subdito});
             array_notificaciones = JSON.parse(array_notificaciones[0].notificaciones);
             array_notificaciones.push(amo);
-            sqliteExpress.update(db, 'usuarios', {notificaciones : JSON.stringify(array_notificaciones)});
+            sqliteExpress.update(db, 'usuarios', {notificaciones : JSON.stringify(array_notificaciones)}, {usuario : subdito});
+        },
+        agregarSubdito : async(subdito, amo) =>{
+            console.log(subdito, amo, '---------------------')
+            let arrayNotificaciones = await sqliteExpress.select(db, 'usuarios', 'notificaciones', {usuario : subdito});
+            arrayNotificaciones = JSON.parse(arrayNotificaciones[0].notificaciones);
+            arrayNotificaciones = arrayNotificaciones.filter(notificacion => notificacion !== amo);
+            arrayNotificaciones = JSON.stringify(arrayNotificaciones);
+            sqliteExpress.update(db, 'usuarios', {notificaciones : arrayNotificaciones}, {usuario : subdito});
+            
+            let arraySubditos = await sqliteExpress.select(db, 'usuarios', 'subditos', {usuario : amo});
+            arraySubditos = JSON.parse(arraySubditos[0].subditos);
+            arraySubditos.push(subdito);
+            arraySubditos = JSON.stringify(arraySubditos);
+            sqliteExpress.update(db, 'usuarios', {subditos: arraySubditos}, {usuario : amo})
         }
     }
 }
