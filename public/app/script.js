@@ -10,6 +10,7 @@ const salir_ventana = document.getElementById('s_ventana');
 const ventana_mensaje = document.getElementById('v_mensaje')
 const ventana_notificaciones = document.getElementById('v_notificaciones');
 const boton_notificaciones = document.getElementById('b_notificaciones');
+const section_ocultos = document.getElementById('ocultos');
 
 let usuario, porx_id_habito, prox_id_tarea;
 let hayTareas = false;
@@ -117,9 +118,13 @@ function ventanaMensaje(color, mensaje){
     setTimeout(()=>{ventana_mensaje.hidden = true}, 4000)
 }
 function mostrarNotificaciones(){
+    console.log("que ondi")
+    section_ocultos.style.display = 'flex';
     ventana_notificaciones.hidden = false;
 }
 function salirNotificaciones (){
+    console.log("que onda te pasa")
+    section_ocultos.style.display = 'none';
     ventana_notificaciones.hidden = true;
 }
 
@@ -129,10 +134,11 @@ let aEnviar;
 boton_agregar.forEach((boton)=>{
     boton.addEventListener('click', (e)=>{
        aEnviar = e.target.name;
+       section_ocultos.style.display = 'flex';
        ventana_agregar.hidden = false;
     })
 })
-salir_ventana.addEventListener('click', ()=>{ventana_agregar.hidden = true;})
+salir_ventana.addEventListener('click', ()=>{section_ocultos.style.display = 'none'; ventana_agregar.hidden = true;})
 
 boton_enviar.addEventListener('click', ()=>{
     let input = document.getElementById('i_agregar').value
@@ -158,6 +164,7 @@ boton_enviar.addEventListener('click', ()=>{
         actualizarTabla(aEnviar, input, proxID);
         document.getElementById('i_agregar').value = "";
         ventana_agregar.hidden = true;
+        section_ocultos.style.display = 'none';
     }
 });
 
