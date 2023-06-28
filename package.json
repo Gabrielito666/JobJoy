@@ -4,6 +4,8 @@
   "description": "\"App para la gestión de tareas y habitos\"",
   "main": "index.js",
   "scripts": {
+    "start": "node .",
+    "dev": "nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +23,9 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "moment-timezone": "^0.5.43",
+    "nodemailer": "^6.9.3",
+    "nodemon": "^2.0.22",
     "sqlite-express": "^1.0.1"
   }
 }

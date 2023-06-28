@@ -1,0 +1,1 @@
+module.exports = array =>{for(i=0; i<array.length; i++){array[i].id = i}; return array};
