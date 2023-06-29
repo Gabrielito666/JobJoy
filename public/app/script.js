@@ -11,8 +11,11 @@ const ventana_mensaje = document.getElementById('v_mensaje')
 const ventana_notificaciones = document.getElementById('v_notificaciones');
 const boton_notificaciones = document.getElementById('b_notificaciones');
 const section_ocultos = document.getElementById('ocultos');
+const div_radios = document.getElementById('d_radios');
+const h2_agregar = document.getElementById('h_agregar');
+const h2_bienvenida = document.getElementById('h_bienvenida');
 
-let usuario, porx_id_habito, prox_id_tarea;
+let usuario, subditos, porx_id_habito, prox_id_tarea;
 let hayTareas = false;
 let hayHabitos = false;
 
@@ -37,6 +40,9 @@ function renderizarTablas(datos){
         let habitos = datos.habitos;
 
         usuario = datos.usuario;
+        subditos = datos.subditos;
+
+        h2_bienvenida.innerHTML = `¡Bienbenido ${usuario}`
 
         if(tareas !== null && tareas.length > 0 ){
             hayTareas = true;
@@ -60,50 +66,55 @@ function renderizarTablas(datos){
             if(hayHabitos){tabla_habitos.innerHTML = stringHabitos;}
         }        
         setTimeout(()=>{ajaxPost('/pantalla', {}, renderizarTablas)}, datos.timeForMidnight)
+
+        let stringNotificaciones = "";
+        if(datos.notificaciones.length <= 0){
+            stringNotificaciones = "<p>No has recibido ninguna notificación... Sal a buscar amigos</p>"
+        }else{
+            datos.notificaciones.forEach(notificacion=>{
+                stringNotificaciones += `<div id="${notificacion}"><h2>Has recibido una notificación para ser subdito de ${notificacion}</h2><button id="b_aceptar" name="${notificacion}">Aceptar</button>`
+            })
+        }
+        stringNotificaciones += '<button id="b_salir">Salir</button></div>' 
+    
+        ventana_notificaciones.innerHTML= stringNotificaciones;
+        let boton_salir = document.getElementById('b_salir');
+        boton_salir.addEventListener('click', salirNotificaciones);
+    
+        if(datos.notificaciones.length > 0){
+            let boton_aceptar = document.getElementById('b_aceptar');
+            boton_aceptar.addEventListener('click', (e)=>{
+                ajaxPost('/solicitud_aceptada', {amo : e.target.name}, ()=>{});
+                salirNotificaciones();
+                document.querySelectorAll(`div[id="${e.target.name}"]`).forEach(not=>{not.remove()});
+            })
+            mostrarNotificaciones();
+        }
+        if(subditos.length>0){
+            let stringSubditos = `<input type="radio" id="r_subdito" name="radio_subdito" value="${usuario}" checked><label for="${usuario}">${usuario}</label><br>`;
+            subditos.forEach(subdito=>{
+                stringSubditos += `<input type="radio" id="r_subdito" name="radio_subdito" value="${subdito}"><label for="${subdito}">${subdito}</label><br>`
+            })
+            console.log(subditos, stringSubditos)
+            div_radios.innerHTML = stringSubditos;
+        }
     }else{location.href = '../login/index.html'};
-
-    let stringNotificaciones = "";
-    if(datos.notificaciones.length <= 0){
-        stringNotificaciones = "<p>No has recibido ninguna notificación... Sal a buscar amigos</p>"
-    }else{
-        datos.notificaciones.forEach(notificacion=>{
-            stringNotificaciones += `<div id="${notificacion}"><h2>Has recibido una notificación para ser subdito de ${notificacion}</h2><button id="b_aceptar" name="${notificacion}">Aceptar</button>`
-        })
-        
-    }
-    stringNotificaciones += '<button id="b_salir">Salir</button></div>' 
-
-    ventana_notificaciones.innerHTML= stringNotificaciones;
-    let boton_salir = document.getElementById('b_salir');
-    boton_salir.addEventListener('click', salirNotificaciones);
-
-    if(datos.notificaciones.length > 0){
-        
-        let boton_aceptar = document.getElementById('b_aceptar');
-        
-        boton_aceptar.addEventListener('click', (e)=>{
-            ajaxPost('/solicitud_aceptada', {amo : e.target.name}, ()=>{});
-            salirNotificaciones();
-            document.querySelectorAll(`div[id="${e.target.name}"]`).forEach(not=>{not.remove()});
-        })
-        mostrarNotificaciones();
-    }
-    
-    
 }
-function actualizarTabla(tabla, actibidad, id) {
-    let stringTareas = "";
-    let stringHabitos = "";
-    if(tabla === 'tareas'){
-        if(!hayTareas){stringTareas +="<tr id='t_cabecera'><th>Tarea</th><th>Creador</th><th>realizada</th></tr>"; hayTareas=true;};
-        stringTareas += `<tr id="${id}" name="tareas"><td>${actibidad}</td><td>${usuario}</td><td><input type='checkbox' id="${id}" name="tareas"></td></tr>`
-    }
-    if(tabla === 'habitos'){
-        if(!hayHabitos){stringHabitos += "<tr id='h_cabecera'><th>Habito</th><th>realizado</th></tr>"; hayHabitos=true;}
-        stringHabitos += `<tr id="${id}" name="habitos"><td>${actibidad}</td><td><input type='checkbox' id="${id}" name="habitos"></td></tr>`
-    }
-    if(stringTareas.length > 0){tabla_tareas.innerHTML += stringTareas;}
-    if(stringHabitos.length > 0){tabla_habitos.innerHTML += stringHabitos;}
+function actualizarTabla(tabla, actibidad, id, paraQuien) {
+    if( paraQuien === usuario){
+        let stringTareas = "";
+        let stringHabitos = "";
+        if(tabla === 'tareas'){
+            if(!hayTareas){stringTareas +="<tr id='t_cabecera'><th>Tarea</th><th>Creador</th><th>realizada</th></tr>"; hayTareas=true;};
+            stringTareas += `<tr id="${id}" name="tareas"><td>${actibidad}</td><td>${usuario}</td><td><input type='checkbox' id="${id}" name="tareas"></td></tr>`
+        }
+        if(tabla === 'habitos'){
+            if(!hayHabitos){stringHabitos += "<tr id='h_cabecera'><th>Habito</th><th>realizado</th></tr>"; hayHabitos=true;}
+            stringHabitos += `<tr id="${id}" name="habitos"><td>${actibidad}</td><td><input type='checkbox' id="${id}" name="habitos"></td></tr>`
+        }
+        if(stringTareas.length > 0){tabla_tareas.innerHTML += stringTareas;}
+        if(stringHabitos.length > 0){tabla_habitos.innerHTML += stringHabitos;}
+    }else{ventanaMensaje('green', `Haz enviado la taréa a ${paraQuien}`)}
 }
 
 function callbackSubdito(respuesta){
@@ -136,6 +147,16 @@ boton_agregar.forEach((boton)=>{
        aEnviar = e.target.name;
        section_ocultos.style.display = 'flex';
        ventana_agregar.hidden = false;
+       if(aEnviar === 'subdito'){
+        div_radios.hidden = true;
+        h2_agregar.innerHTML = 'Ingresa el nombre de usuario de quien quieres que sea tu subdito'
+       }else if(aEnviar === 'habitos'){
+        div_radios.hidden = true;
+        h2_agregar.innerHTML = `Ingresa un nuevo elemento a tu lista de ${aEnviar}`
+       }else{
+        div_radios.hidden = false;
+        h2_agregar.innerHTML = `Ingresa un nuevo elemento a tu lista de ${aEnviar}`
+       } 
     })
 })
 salir_ventana.addEventListener('click', ()=>{section_ocultos.style.display = 'none'; ventana_agregar.hidden = true;})
@@ -144,7 +165,8 @@ boton_enviar.addEventListener('click', ()=>{
     let input = document.getElementById('i_agregar').value
     if(aEnviar === 'subdito'){
         if (input === usuario){ventanaMensaje('red', 'No puedes ser tu propio subdito')}
-        else{ajaxPost('/invitar_subdito', {subdito : input}, callbackSubdito)};
+        else{ajaxPost('/invitar_subdito', {subdito : input}, callbackSubdito)
+    };
     }else{
         let nuevoElemento = {actibidad : input};
         let proxID;
@@ -159,13 +181,21 @@ boton_enviar.addEventListener('click', ()=>{
             proxID = porx_id_habito;
             porx_id_habito++
         };
+
+        let aQuien;
+        if(subditos.length>0){
+            let radios = document.querySelectorAll('#r_subdito');
+            radios.forEach(radio=>{if(radio.checked){aQuien = radio.value}})
+        }else{
+            aQuien = usuario;
+        }
       
-        ajaxPost(`agregar/${aEnviar}`, {nuevoElemento : nuevoElemento}, ()=>{});
-        actualizarTabla(aEnviar, input, proxID);
-        document.getElementById('i_agregar').value = "";
-        ventana_agregar.hidden = true;
-        section_ocultos.style.display = 'none';
+        ajaxPost(`agregar/${aEnviar}/${aQuien}`, {nuevoElemento : nuevoElemento}, ()=>{});
+        actualizarTabla(aEnviar, input, proxID, aQuien);
     }
+    document.getElementById('i_agregar').value = "";
+    ventana_agregar.hidden = true;
+    section_ocultos.style.display = 'none';
 });
 
 boton_realizar.addEventListener('click', ()=>{

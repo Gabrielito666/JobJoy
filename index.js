@@ -72,7 +72,11 @@ app.post('/pantalla', async(req, res)=>{
     }else{res.json({ok : false})}
 });
 
-app.post('/app/agregar/:item', async(req, res)=>{db().agregarItem(req.session.usuario, req.params.item, req.body); res.json({ ok : true })});
+app.post('/app/agregar/:item/:usuario', async(req, res)=>{
+
+    db().agregarItem(req.params.usuario, req.params.item, req.body); res.json({ ok : true })
+
+});
 
 app.post('/quitar', async(req, res)=>{
     let mensaje = req.body;

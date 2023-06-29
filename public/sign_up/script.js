@@ -1,7 +1,7 @@
-const boton_enviar = document.getElementById('enviar');
+const boton_enviar = document.getElementById('ingresar');
 const ventana_emergente = document.getElementById('ventana');
-const ventana_formulario = document.getElementById('formulario');
-const ventana_exito = document.getElementById('exito');
+const ventana_formulario = document.getElementById('visibles');
+const ventana_exito = document.getElementById('ocultos');
 
 boton_enviar.addEventListener('click', ()=>{
     boton_enviar.disabled = true;
@@ -29,7 +29,7 @@ boton_enviar.addEventListener('click', ()=>{
             if (xhr.readyState == 4 && xhr.status == 200){
                 respuesta = JSON.parse(xhr.responseText);
                 if (!respuesta.usernameDisponible){mensaje(`El nombre de usuario "${valor_username}" no está disponible`)}
-                else {ventana_formulario.hidden = true; ventana_exito.hidden = false};
+                else {ventana_formulario.hidden = true; ventana_exito.style.display = 'flex'};
             }   
             };
             xhr.send(JSON.stringify(datos));

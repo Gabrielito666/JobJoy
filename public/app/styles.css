@@ -53,7 +53,7 @@ button{
     font-size: 20px;
     background-color: white;
 }
-p, table{
+p, table, input, label{
     font-size: 20px;
     margin: auto
 }
@@ -66,11 +66,31 @@ table {
 th, td {
     border: 1px solid black;
 }
-input{
-    margin-top: 30%;
+div input{
+    margin-top: 15%;
     width: 70%;
     height: 7%;
 }
 #v_notificaciones p {
     margin-top: 30%;
+}
+aside{
+    margin-top: 3vw;
+    text-align: left;
+}
+aside input{
+    margin-top: 0.5vw;
+    margin-bottom: 0.5vw;
+}
+
+button#ingresar{
+    margin-top: 5%;
+}
+
+h1.t_login{
+    margin :5%
+}
+
+section#ocultos div p{
+    margin-top: 20vh;
 }
