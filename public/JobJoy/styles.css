@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Mono-regular.woff2');
+}
+@font-face {
+    font-family: 'Arapey';
+    src: url('Arapey-Regular.woff2');
+}
 body{
     background-color: #e8a3eb;
     display: flex;
@@ -52,10 +60,13 @@ button{
     padding: 0.3%;
     font-size: 20px;
     background-color: white;
+    font-family: 'Roboto';
 }
+h1, h2 {font-family: 'Roboto';}
 p, table, input, label{
-    font-size: 20px;
-    margin: auto
+    font-size: calc( 20px + 0.4vw);
+    margin: auto;
+    font-family: 'Arapey';
 }
 table {
     border: 1px solid black;
@@ -88,7 +99,7 @@ button#ingresar{
 }
 
 h1.t_login{
-    margin :5%
+    margin :5%;
 }
 
 section#ocultos div p{

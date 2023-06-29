@@ -1,4 +1,4 @@
-const { json } = require('express');
+
 const sqliteExpress = require('sqlite-express');
 module.exports = () =>{
     const db = sqliteExpress.createDB('./data.db');
@@ -89,7 +89,6 @@ module.exports = () =>{
             }  
         },
         actualizarIds : (usuario, tareas, habitos) => {sqliteExpress.update(db, 'usuarios', {tareas : JSON.stringify(tareas), habitos : JSON.stringify(habitos)}, {usuario : usuario})},
-        resetearHabitos : ()=>{},
         eliminarFila :(usuario)=>{sqliteExpress.delete(db, 'usuarios', {usuario : usuario})},
         invitarSubdito : async (amo, subdito)=>{
             let array_notificaciones = await sqliteExpress.select(db, 'usuarios', 'notificaciones', {usuario : subdito});
@@ -110,6 +109,17 @@ module.exports = () =>{
             arraySubditos.push(subdito);
             arraySubditos = JSON.stringify(arraySubditos);
             sqliteExpress.update(db, 'usuarios', {subditos: arraySubditos}, {usuario : amo})
+        },
+        resetearHabitos : async ()=>{
+            let arrayUsuarios = await sqliteExpress.select(db, 'usuarios', 'usuario, habitos');
+            console.log(arrayUsuarios)
+            arrayUsuarios.forEach(user=>{
+                let userHabitos = JSON.parse(user.habitos);
+                userHabitos.forEach(habito=>{habito.realizado = false;});
+                userHabitos = JSON.stringify(userHabitos);
+                sqliteExpress.update(db, 'usuarios', {habitos : userHabitos}, {usuario : user.usuario});
+            });
+            console.log(await sqliteExpress.select(db, 'usuarios', 'usuario, habitos')); 
         }
     }
 }

@@ -46,7 +46,7 @@ function renderizarTablas(datos){
 
         if(tareas !== null && tareas.length > 0 ){
             hayTareas = true;
-            let stringTareas = "<tr id='t_cabecera'><th>Tarea</th><th>Creador</th><th>realizada</th></tr>";
+            let stringTareas = "<tr id='t_cabecera'><th>Tarea</th><th>Creador</th><th>Realizada</th></tr>";
             tareas.forEach((tarea)=>{
                 stringTareas += `<tr id="${tarea.id}" name="tareas"><td>${tarea.actibidad}</td><td>${tarea.creador}</td><td><input type='checkbox' id="${tarea.id}" name="tareas"></td></tr>`
                 prox_id_tarea ++;
@@ -54,7 +54,7 @@ function renderizarTablas(datos){
             tabla_tareas.innerHTML = stringTareas;
         }
         if(habitos !== null && habitos.length > 0){
-            let stringHabitos = "<tr id='h_cabecera'><th>Habito</th><th>realizado</th></tr>";
+            let stringHabitos = "<tr id='h_cabecera'><th>Habito</th><th>Realizado</th></tr>";
             
             habitos.forEach((habito)=>{
                 if(!habito.realizado){
@@ -105,11 +105,11 @@ function actualizarTabla(tabla, actibidad, id, paraQuien) {
         let stringTareas = "";
         let stringHabitos = "";
         if(tabla === 'tareas'){
-            if(!hayTareas){stringTareas +="<tr id='t_cabecera'><th>Tarea</th><th>Creador</th><th>realizada</th></tr>"; hayTareas=true;};
+            if(!hayTareas){stringTareas +="<tr id='t_cabecera'><th>Tarea</th><th>Creador</th><th>Realizada</th></tr>"; hayTareas=true;};
             stringTareas += `<tr id="${id}" name="tareas"><td>${actibidad}</td><td>${usuario}</td><td><input type='checkbox' id="${id}" name="tareas"></td></tr>`
         }
         if(tabla === 'habitos'){
-            if(!hayHabitos){stringHabitos += "<tr id='h_cabecera'><th>Habito</th><th>realizado</th></tr>"; hayHabitos=true;}
+            if(!hayHabitos){stringHabitos += "<tr id='h_cabecera'><th>Habito</th><th>Realizado</th></tr>"; hayHabitos=true;}
             stringHabitos += `<tr id="${id}" name="habitos"><td>${actibidad}</td><td><input type='checkbox' id="${id}" name="habitos"></td></tr>`
         }
         if(stringTareas.length > 0){tabla_tareas.innerHTML += stringTareas;}
@@ -189,8 +189,7 @@ boton_enviar.addEventListener('click', ()=>{
         }else{
             aQuien = usuario;
         }
-      
-        ajaxPost(`agregar/${aEnviar}/${aQuien}`, {nuevoElemento : nuevoElemento}, ()=>{});
+        ajaxPost(`/agregar/${aEnviar}/${aQuien}`, {nuevoElemento : nuevoElemento}, ()=>{});
         actualizarTabla(aEnviar, input, proxID, aQuien);
     }
     document.getElementById('i_agregar').value = "";

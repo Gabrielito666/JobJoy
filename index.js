@@ -18,7 +18,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-app.get('/', async (req, res)=>{res.redirect('app/index.html')});
+app.get('/JobJoy', async (req, res)=>{res.redirect('/JobJoy/app/index.html')});
     
 app.post('/sign_up', async(req, res)=>{
     let mensaje = req.body;
@@ -72,7 +72,7 @@ app.post('/pantalla', async(req, res)=>{
     }else{res.json({ok : false})}
 });
 
-app.post('/app/agregar/:item/:usuario', async(req, res)=>{
+app.post('/agregar/:item/:usuario', async(req, res)=>{
 
     db().agregarItem(req.params.usuario, req.params.item, req.body); res.json({ ok : true })
 
@@ -95,8 +95,15 @@ app.post('/invitar_subdito', async(req, res)=>{
 app.post('/solicitud_aceptada', async(req, res)=>{
     let mensaje = req.body;
     console.log(mensaje.amo)
-    //comprobar que no se ha aceptado ya una solicitud igual
+    //comprobar que no se ha aceptado ya una solicitud igual/hacerrrrr!!!!!!!!!!!!!
     db().agregarSubdito(req.session.usuario, mensaje.amo)
 })
 
-app.listen(PORT, ()=>{console.log('escuchando el puerto '+ PORT)})
+function medianoche (){
+    setTimeout(()=>{
+        db().resetearHabitos();
+        setTimeout(medianoche, 30000)
+    }, timeForMidnight())
+}medianoche();
+
+app.listen(PORT, ()=>{console.log('escuchando el puerto '+ PORT)});
