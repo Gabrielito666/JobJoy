@@ -1,0 +1,12 @@
+1)arreglar login 
+2) mensajes de alerta de cada ajax
+3) mejorar script.js de app... que quede semantico y ordenado
+4) cookies para la app de escritoio
+5) mejorar semántica index.js
+6) app movil
+7) mejorar sqlite-express
+8) adaptar a sqlite-express 2.0
+9) ordenar llamados a la base de datos
+10) que funcionen los botones de más de una notificación
+11) mensajes cuando cumpls con todos tus habitos
+12) opciones avanzadas
