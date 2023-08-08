@@ -23,7 +23,7 @@ boton_enviar.addEventListener('click', ()=>{
             let datos = {usuario : valor_username, email : valor_email, password : valor_password};
             let respuesta;
             let xhr = new XMLHttpRequest();
-            xhr.open('POST', '/sign_up', true);
+            xhr.open('POST', '/JobJoy/sign_up', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.onreadystatechange = ()=> {
             if (xhr.readyState == 4 && xhr.status == 200){

@@ -10,7 +10,7 @@ boton_ingresar.addEventListener('click', ()=>{
         let datos = {username : valor_username, password : valor_password}
         let respuesta;
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '/login', true);
+        xhr.open('POST', '/JobJoy/login', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onreadystatechange = function () {
           if (xhr.readyState == 4 && xhr.status == 200){
