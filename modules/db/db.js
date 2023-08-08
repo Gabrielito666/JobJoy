@@ -1,7 +1,7 @@
 
 const sqliteExpress = require('sqlite-express');
 const path = require('path');
-const db = sqliteExpress.createDB(path.resolve(__dirname, 'data.db'));
+const db = sqliteExpress.createDB(path.resolve(__dirname, '../../data.db'));
 module.exports ={
     usuarioExiste : async (usuario)=>{
         let resultado = await sqliteExpress.select(db, 'usuarios', 'usuario', {usuario : usuario});
