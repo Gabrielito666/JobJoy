@@ -1,5 +1,6 @@
 
 const sqliteExpress = require('sqlite-express');
+const path = require('path');
 const db = sqliteExpress.createDB(path.resolve(__dirname, 'data.db'));
 module.exports ={
     usuarioExiste : async (usuario)=>{
