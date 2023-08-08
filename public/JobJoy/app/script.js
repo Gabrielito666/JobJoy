@@ -21,7 +21,7 @@ let hayHabitos = false;
 
 function ajaxPost (url, objeto, callback){
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
+    xhr.open('POST', `/JobJoy${url}`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function () {
         if(xhr.readyState === 4 && xhr.status === 200){callback(JSON.parse(xhr.responseText));}
